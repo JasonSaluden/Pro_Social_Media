@@ -1,0 +1,171 @@
+@{
+    ViewData["Title"] = "Messagerie";
+}
+
+<div class="row g-0" style="height: calc(100vh - 180px); min-height: 500px;">
+    <!-- Liste des conversations -->
+    <div class="col-md-4 col-lg-3 border-end">
+        <div class="d-flex flex-column h-100">
+            <!-- Header conversations -->
+            <div class="p-3 border-bottom bg-light">
+                <h5 class="mb-0">
+                    <i class="bi bi-chat-dots me-2"></i>Messagerie
+                </h5>
+            </div>
+
+            <!-- Bouton nouvelle conversation -->
+            <div class="p-2 border-bottom">
+                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#newConversationModal">
+                    <i class="bi bi-plus-lg me-1"></i>Nouvelle conversation
+                </button>
+            </div>
+
+            <!-- Liste des conversations -->
+            <div class="overflow-auto flex-grow-1" id="conversations-list">
+                <div class="text-center py-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zone de chat -->
+    <div class="col-md-8 col-lg-9">
+        <div class="d-flex flex-column h-100" id="chat-area">
+            <!-- Placeholder quand aucune conversation n'est sélectionnée -->
+            <div class="d-flex align-items-center justify-content-center h-100 text-muted" id="no-conversation-selected">
+                <div class="text-center">
+                    <i class="bi bi-chat-square-text display-1 mb-3"></i>
+                    <p>Sélectionnez une conversation pour afficher les messages</p>
+                </div>
+            </div>
+
+            <!-- Contenu du chat (caché par défaut) -->
+            <div class="d-none flex-column h-100" id="conversation-content">
+                <!-- Header du chat -->
+                <div class="p-3 border-bottom bg-light d-flex align-items-center">
+                    <img src="" class="rounded-circle me-3" id="chat-participant-avatar" width="40" height="40" alt="Avatar">
+                    <div>
+                        <h6 class="mb-0" id="chat-participant-name">-</h6>
+                        <small class="text-muted" id="chat-participant-headline">-</small>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="flex-grow-1 overflow-auto p-3" id="messages-container">
+                    <!-- Messages chargés dynamiquement -->
+                </div>
+
+                <!-- Formulaire d'envoi -->
+                <div class="p-3 border-top bg-light">
+                    <form id="send-message-form" class="d-flex gap-2">
+                        <input type="text" class="form-control" id="message-input"
+                               placeholder="Écrivez votre message..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal nouvelle conversation -->
+<div class="modal fade" id="newConversationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nouvelle conversation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Recherche d'utilisateur -->
+                <div class="mb-3">
+                    <label class="form-label">Rechercher un utilisateur</label>
+                    <input type="text" class="form-control" id="search-user-input"
+                           placeholder="Nom ou email...">
+                </div>
+
+                <!-- Résultats de recherche -->
+                <div id="search-results" class="mb-3" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Résultats chargés dynamiquement -->
+                </div>
+
+                <!-- Utilisateur sélectionné -->
+                <div id="selected-user-container" class="d-none mb-3">
+                    <label class="form-label">Destinataire</label>
+                    <div class="d-flex align-items-center p-2 bg-light rounded">
+                        <img src="" class="rounded-circle me-2" id="selected-user-avatar" width="32" height="32" alt="">
+                        <span id="selected-user-name">-</span>
+                        <button type="button" class="btn btn-sm btn-link text-danger ms-auto" id="clear-selected-user">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" id="selected-user-id">
+                </div>
+
+                <!-- Message initial -->
+                <div class="mb-3">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-control" id="initial-message" rows="3"
+                              placeholder="Écrivez votre premier message..." required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="start-conversation-btn" disabled>
+                    <i class="bi bi-send me-1"></i>Envoyer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .conversation-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .conversation-item:hover {
+        background-color: #f8f9fa;
+    }
+    .conversation-item.active {
+        background-color: #e3f2fd;
+    }
+    .message-bubble {
+        max-width: 70%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        margin-bottom: 10px;
+    }
+    .message-sent {
+        background-color: #0d6efd;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 4px;
+    }
+    .message-received {
+        background-color: #e9ecef;
+        color: #212529;
+        margin-right: auto;
+        border-bottom-left-radius: 4px;
+    }
+    .message-time {
+        font-size: 0.7rem;
+        opacity: 0.7;
+    }
+    .search-result-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .search-result-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/js/messages.js"></script>
+}

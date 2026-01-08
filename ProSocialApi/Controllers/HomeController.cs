@@ -18,4 +18,9 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    public IActionResult Messages()
+    {
+        return View();
+    }
 }

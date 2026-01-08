@@ -18,11 +18,11 @@ namespace ProSocialApi.Data;
 /// Objectif : Fournir un jeu de données cohérent pour le développement et les tests.
 ///
 /// Données créées :
-/// - 5 utilisateurs avec des profils professionnels variés
-/// - 6 connexions (réseau social entre les utilisateurs)
-/// - 6 posts avec du contenu tech/professionnel
+/// - 6 utilisateurs avec des profils professionnels variés
+/// - 11 connexions (réseau social entre les utilisateurs)
+/// - 7 posts avec du contenu varié
 /// - 6 commentaires sur les posts
-/// - 15 likes distribués sur les posts
+/// - 20 likes distribués sur les posts
 ///
 /// Sécurité : Les mots de passe sont hashés avec BCrypt avant stockage.
 /// </summary>
@@ -61,65 +61,77 @@ public static class DataSeeder
 
         var users = new List<User>
         {
-            // Utilisateur 1 : Alice - Développeuse Full Stack
+            // Utilisateur 1 : Gérard Larcher
             new User
             {
                 Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                Email = "alice.dupont@email.com",
+                Email = "gerard.larcher@email.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
-                FirstName = "Alice",
-                LastName = "Dupont",
-                Headline = "Développeuse Full Stack | React & .NET",
-                Bio = "Passionnée par le développement web et les nouvelles technologies. 10 ans d'expérience dans le secteur IT.",
-                AvatarUrl = "https://i.pravatar.cc/150?u=alice"  // Service d'avatars placeholder
+                FirstName = "Gérard",
+                LastName = "Larcher",
+                Headline = "Fervent défenseur des privilèges",
+                Bio = "J'aime bien la cantine",
+                AvatarUrl = "https://i.pravatar.cc/150?u=gerard"
             },
-            // Utilisateur 2 : Bob - Chef de Projet
+            // Utilisateur 2 : François Bayrou
             new User
             {
                 Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                Email = "bob.martin@email.com",
+                Email = "francois.bayrou@email.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
-                FirstName = "Bob",
-                LastName = "Martin",
-                Headline = "Chef de Projet Digital",
-                Bio = "Expert en gestion de projet agile. Scrum Master certifié.",
-                AvatarUrl = "https://i.pravatar.cc/150?u=bob"
+                FirstName = "François",
+                LastName = "Bayrou",
+                Headline = "Chef de nous",
+                Bio = "Expert en conseil de gestion stratifié dans l'expansion lucrative",
+                AvatarUrl = "https://i.pravatar.cc/150?u=francois"
             },
-            // Utilisateur 3 : Claire - Designer UX/UI
+            // Utilisateur 3 : Yael Braun-Pivet
             new User
             {
                 Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-                Email = "claire.bernard@email.com",
+                Email = "yael.braunpivet@email.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
-                FirstName = "Claire",
-                LastName = "Bernard",
-                Headline = "UX/UI Designer | Figma Expert",
-                Bio = "Je crée des expériences utilisateur mémorables. Design thinking enthusiast.",
-                AvatarUrl = "https://i.pravatar.cc/150?u=claire"
+                FirstName = "Yael",
+                LastName = "Braun-Pivet",
+                Headline = "Assistante sociale",
+                Bio = "Je crée des expériences mémorables.",
+                AvatarUrl = "https://i.pravatar.cc/150?u=yael"
             },
-            // Utilisateur 4 : David - DevOps Engineer
+            // Utilisateur 4 : Noël Flantier
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-                Email = "david.petit@email.com",
+                Email = "noel.flantier@email.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
-                FirstName = "David",
-                LastName = "Petit",
-                Headline = "DevOps Engineer | AWS & Kubernetes",
-                Bio = "Automatisation, CI/CD, et infrastructure as code. Cloud native advocate.",
-                AvatarUrl = "https://i.pravatar.cc/150?u=david"
+                FirstName = "Noël",
+                LastName = "Flantier",
+                Headline = "Reporter",
+                Bio = "Je fais des photos. Sur un reportage brésilien",
+                AvatarUrl = "https://i.pravatar.cc/150?u=noel"
             },
-            // Utilisateur 5 : Emma - Data Scientist
+            // Utilisateur 5 : Dolores Koulechov
             new User
             {
                 Id = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-                Email = "emma.leroy@email.com",
+                Email = "dolores.koulechov@email.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
-                FirstName = "Emma",
-                LastName = "Leroy",
-                Headline = "Data Scientist | Python & Machine Learning",
-                Bio = "Transforming data into insights. PhD en Intelligence Artificielle.",
-                AvatarUrl = "https://i.pravatar.cc/150?u=emma"
+                FirstName = "Dolores",
+                LastName = "Koulechov",
+                Headline = "Lieutenant colonel de l'armée israélienne",
+                Bio = "Je suis la secrétaire de qui ?",
+                AvatarUrl = "https://i.pravatar.cc/150?u=dolores"
+            },
+            // Utilisateur 6 : Jason Saluden
+            new User
+            {
+                Id = Guid.Parse("66666666-6666-6666-6666-666666666666"),
+                Email = "saluden.jason@gmail.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
+                FirstName = "Jason",
+                LastName = "Saluden",
+                Headline = "Développeur Web Full Stack",
+                Bio = "Passionné par le code, le café et les architectures cloud. Toujours en quête de nouvelles technologies à explorer.",
+                AvatarUrl = "https://i.pravatar.cc/150?u=jason"
             }
         };
 
@@ -129,57 +141,88 @@ public static class DataSeeder
         Console.WriteLine($"{users.Count} utilisateurs créés");
         // ÉTAPE 2 : CRÉATION DES CONNEXIONS (RÉSEAU SOCIAL)
         // Graphe de connexions :
-        // - Alice <-> Bob (Accepted)
-        // - Alice <-> Claire (Accepted)
-        // - Bob <-> David (Accepted)
-        // - Claire <-> Emma (Accepted)
-        // - David -> Alice (Pending - demande en attente)
-        // - Emma <-> Bob (Accepted)
+        // - Gérard <-> François (Accepted)
+        // - Gérard <-> Yael (Accepted)
+        // - François <-> Noël (Accepted)
+        // - Yael <-> Dolores (Accepted)
+        // - Noël -> Gérard (Pending - demande en attente)
+        // - Dolores <-> François (Accepted)
         //
         // Cela crée un petit réseau interconnecté pour tester le feed
 
         var connections = new List<Connection>
         {
-            // Alice est connectée avec Bob et Claire (connexions acceptées)
+            // Gérard est connecté avec François et Yael (connexions acceptées)
             new Connection
             {
-                RequesterId = users[0].Id, // Alice a envoyé la demande
-                AddresseeId = users[1].Id, // Bob a accepté
+                RequesterId = users[0].Id, // Gérard a envoyé la demande
+                AddresseeId = users[1].Id, // François a accepté
                 Status = ConnectionStatus.Accepted
             },
             new Connection
             {
-                RequesterId = users[0].Id, // Alice
-                AddresseeId = users[2].Id, // Claire
+                RequesterId = users[0].Id, // Gérard
+                AddresseeId = users[2].Id, // Yael
                 Status = ConnectionStatus.Accepted
             },
-            // Bob est connecté avec David
+            // François est connecté avec Noël
             new Connection
             {
-                RequesterId = users[1].Id, // Bob
-                AddresseeId = users[3].Id, // David
+                RequesterId = users[1].Id, // François
+                AddresseeId = users[3].Id, // Noël
                 Status = ConnectionStatus.Accepted
             },
-            // Claire est connectée avec Emma
+            // Yael est connectée avec Dolores
             new Connection
             {
-                RequesterId = users[2].Id, // Claire
-                AddresseeId = users[4].Id, // Emma
+                RequesterId = users[2].Id, // Yael
+                AddresseeId = users[4].Id, // Dolores
                 Status = ConnectionStatus.Accepted
             },
-            // Demande en attente : David veut se connecter avec Alice
+            // Demande en attente : Noël veut se connecter avec Gérard
             // Utile pour tester l'endpoint GET /api/connections/pending
             new Connection
             {
-                RequesterId = users[3].Id, // David a envoyé
-                AddresseeId = users[0].Id, // Alice doit accepter/refuser
+                RequesterId = users[3].Id, // Noël a envoyé
+                AddresseeId = users[0].Id, // Gérard doit accepter/refuser
                 Status = ConnectionStatus.Pending
             },
-            // Emma est connectée avec Bob
+            // Dolores est connectée avec François
             new Connection
             {
-                RequesterId = users[4].Id, // Emma
-                AddresseeId = users[1].Id, // Bob
+                RequesterId = users[4].Id, // Dolores
+                AddresseeId = users[1].Id, // François
+                Status = ConnectionStatus.Accepted
+            },
+            // Jason est connecté avec tout le monde (admin/dev)
+            new Connection
+            {
+                RequesterId = users[5].Id, // Jason
+                AddresseeId = users[0].Id, // Gérard
+                Status = ConnectionStatus.Accepted
+            },
+            new Connection
+            {
+                RequesterId = users[5].Id, // Jason
+                AddresseeId = users[1].Id, // François
+                Status = ConnectionStatus.Accepted
+            },
+            new Connection
+            {
+                RequesterId = users[5].Id, // Jason
+                AddresseeId = users[2].Id, // Yael
+                Status = ConnectionStatus.Accepted
+            },
+            new Connection
+            {
+                RequesterId = users[5].Id, // Jason
+                AddresseeId = users[3].Id, // Noël
+                Status = ConnectionStatus.Accepted
+            },
+            new Connection
+            {
+                RequesterId = users[5].Id, // Jason
+                AddresseeId = users[4].Id, // Dolores
                 Status = ConnectionStatus.Accepted
             }
         };
@@ -188,59 +231,67 @@ public static class DataSeeder
         await context.SaveChangesAsync();
         Console.WriteLine($"{connections.Count} connexions créées");
         // ÉTAPE 3 : CRÉATION DES POSTS
-        // Posts avec du contenu tech/professionnel réaliste
+        // Posts avec du contenu varié
         // Les dates sont décalées dans le passé pour simuler de l'activité
         // Les GUIDs fixes permettent de référencer les posts facilement
 
         var posts = new List<Post>
         {
-            // Post 1 : Alice parle de sa formation .NET 8
+            // Post 1 : Gérard parle de la cantine
             new Post
             {
                 Id = Guid.Parse("aaaa1111-1111-1111-1111-111111111111"),
-                AuthorId = users[0].Id, // Alice
-                Content = "Ravie d'annoncer que je viens de terminer une formation avancée sur .NET 8 ! Les nouvelles fonctionnalités de performance sont impressionnantes. Qui d'autre a testé les nouveaux features ?",
+                AuthorId = users[0].Id, // Gérard
+                Content = "Excellent repas à la cantine aujourd'hui ! Le chef s'est surpassé. Qui d'autre apprécie les bons petits plats entre collègues ?",
                 CreatedAt = DateTime.UtcNow.AddDays(-5)  // Il y a 5 jours
             },
-            // Post 2 : Alice partage une astuce technique
+            // Post 2 : Gérard partage une réflexion
             new Post
             {
                 Id = Guid.Parse("aaaa2222-2222-2222-2222-222222222222"),
-                AuthorId = users[0].Id, // Alice
-                Content = "Astuce du jour : Utilisez les records en C# pour vos DTOs. Immutabilité + moins de code = moins de bugs !",
+                AuthorId = users[0].Id, // Gérard
+                Content = "Astuce du jour : Toujours défendre ses privilèges avec élégance. C'est un art qui se cultive !",
                 CreatedAt = DateTime.UtcNow.AddDays(-2)  // Il y a 2 jours
             },
-            // Post 3 : Bob parle de son équipe agile
+            // Post 3 : François parle de gestion
             new Post
             {
                 Id = Guid.Parse("bbbb1111-1111-1111-1111-111111111111"),
-                AuthorId = users[1].Id, // Bob
-                Content = "Notre équipe vient de terminer un sprint record ! 47 story points livrés. La clé ? Une bonne communication et des daily meetings efficaces de 15 min max.",
+                AuthorId = users[1].Id, // François
+                Content = "Notre équipe vient de terminer une session de conseil stratifié ! L'expansion lucrative est en marche. La clé ? Une bonne communication et des réunions efficaces.",
                 CreatedAt = DateTime.UtcNow.AddDays(-4)  // Il y a 4 jours
             },
-            // Post 4 : Claire présente son nouveau projet UX
+            // Post 4 : Yael présente son travail social
             new Post
             {
                 Id = Guid.Parse("cccc1111-1111-1111-1111-111111111111"),
-                AuthorId = users[2].Id, // Claire
-                Content = "Nouveau projet en cours : refonte complète de l'UX d'une app bancaire. Le challenge ? Simplifier des workflows complexes tout en respectant les contraintes réglementaires.",
+                AuthorId = users[2].Id, // Yael
+                Content = "Nouveau projet en cours : accompagnement de familles en difficulté. Le challenge ? Créer des expériences vraiment mémorables pour chacun.",
                 CreatedAt = DateTime.UtcNow.AddDays(-3)  // Il y a 3 jours
             },
-            // Post 5 : David parle de migration Kubernetes
+            // Post 5 : Noël parle de son reportage
             new Post
             {
                 Id = Guid.Parse("dddd1111-1111-1111-1111-111111111111"),
-                AuthorId = users[3].Id, // David
-                Content = "Migration réussie vers Kubernetes ! 200 microservices, zéro downtime. Si vous avez des questions sur K8s, n'hésitez pas à me contacter.",
+                AuthorId = users[3].Id, // Noël
+                Content = "Reportage brésilien terminé ! Des photos incroyables à partager bientôt. Si vous avez des questions sur le photojournalisme, n'hésitez pas !",
                 CreatedAt = DateTime.UtcNow.AddDays(-1)  // Hier
             },
-            // Post 6 : Emma parle de son modèle ML
+            // Post 6 : Dolores parle de son expérience
             new Post
             {
                 Id = Guid.Parse("eeee1111-1111-1111-1111-111111111111"),
-                AuthorId = users[4].Id, // Emma
-                Content = "Notre nouveau modèle de ML atteint 94% de précision sur la détection de fraude. Le secret ? Feature engineering + XGBoost + beaucoup de café ☕",
+                AuthorId = users[4].Id, // Dolores
+                Content = "Qui suis-je vraiment ? Lieutenant colonel ou secrétaire ? Les deux mon capitaine ! La polyvalence est ma force.",
                 CreatedAt = DateTime.UtcNow.AddHours(-12)  // Il y a 12 heures
+            },
+            // Post 7 : Jason présente Pro Social
+            new Post
+            {
+                Id = Guid.Parse("ffff1111-1111-1111-1111-111111111111"),
+                AuthorId = users[5].Id, // Jason
+                Content = "Bienvenue sur Pro Social ! Cette plateforme a été développée avec ASP.NET Core 9, Entity Framework, MongoDB et beaucoup de passion. N'hésitez pas à me faire vos retours !",
+                CreatedAt = DateTime.UtcNow.AddHours(-6)  // Il y a 6 heures
             }
         };
 
@@ -253,51 +304,51 @@ public static class DataSeeder
 
         var comments = new List<Comment>
         {
-            // Commentaires sur le post d'Alice (.NET 8) - posts[0]
+            // Commentaires sur le post de Gérard (cantine) - posts[0]
             new Comment
             {
                 PostId = posts[0].Id,
-                AuthorId = users[1].Id, // Bob commente
-                Content = "Félicitations Alice ! J'ai hâte de voir tes projets avec .NET 8.",
+                AuthorId = users[1].Id, // François commente
+                Content = "Félicitations Gérard ! La cantine c'est sacré, je suis bien d'accord.",
                 CreatedAt = DateTime.UtcNow.AddDays(-5).AddHours(2)  // 2h après le post
             },
             new Comment
             {
                 PostId = posts[0].Id,
-                AuthorId = users[2].Id, // Claire commente
-                Content = "Super ! Tu pourras nous faire un retour d'expérience ?",
+                AuthorId = users[2].Id, // Yael commente
+                Content = "Super ! Tu pourras nous recommander le menu du jour ?",
                 CreatedAt = DateTime.UtcNow.AddDays(-5).AddHours(4)  // 4h après le post
             },
-            // Commentaire sur le post de Bob (sprint) - posts[2]
+            // Commentaire sur le post de François (gestion) - posts[2]
             new Comment
             {
                 PostId = posts[2].Id,
-                AuthorId = users[0].Id, // Alice commente
-                Content = "Bravo à toute l'équipe ! 47 points c'est impressionnant 💪",
+                AuthorId = users[0].Id, // Gérard commente
+                Content = "Bravo à toute l'équipe ! L'expansion lucrative, j'adore le concept !",
                 CreatedAt = DateTime.UtcNow.AddDays(-4).AddHours(3)
             },
-            // Commentaires sur le post de David (K8s) - posts[4]
+            // Commentaires sur le post de Noël (reportage) - posts[4]
             // Simulation d'une conversation (question -> réponse)
             new Comment
             {
                 PostId = posts[4].Id,
-                AuthorId = users[1].Id, // Bob pose une question
-                Content = "200 microservices ! Vous utilisez quel service mesh ?",
+                AuthorId = users[1].Id, // François pose une question
+                Content = "Le Brésil ! Vous avez utilisé quel matériel photo ?",
                 CreatedAt = DateTime.UtcNow.AddDays(-1).AddHours(2)
             },
             new Comment
             {
                 PostId = posts[4].Id,
-                AuthorId = users[3].Id, // David répond (auteur du post)
-                Content = "@Bob On utilise Istio, ça fonctionne très bien pour notre use case.",
+                AuthorId = users[3].Id, // Noël répond (auteur du post)
+                Content = "@François Un bon vieux Nikon, ça fonctionne très bien pour ce type de reportage.",
                 CreatedAt = DateTime.UtcNow.AddDays(-1).AddHours(3)
             },
-            // Commentaire sur le post d'Emma (ML) - posts[5]
+            // Commentaire sur le post de Dolores (polyvalence) - posts[5]
             new Comment
             {
                 PostId = posts[5].Id,
-                AuthorId = users[0].Id, // Alice commente
-                Content = "94% c'est excellent ! Vous avez essayé les transformers aussi ?",
+                AuthorId = users[0].Id, // Gérard commente
+                Content = "La polyvalence c'est excellent ! Vous gérez aussi la cantine ?",
                 CreatedAt = DateTime.UtcNow.AddHours(-10)
             }
         };
@@ -311,33 +362,40 @@ public static class DataSeeder
 
         var likes = new List<Like>
         {
-            // Likes sur le post d'Alice (.NET 8) - 3 likes
-            new Like { PostId = posts[0].Id, UserId = users[1].Id }, // Bob like
-            new Like { PostId = posts[0].Id, UserId = users[2].Id }, // Claire like
-            new Like { PostId = posts[0].Id, UserId = users[3].Id }, // David like
+            // Likes sur le post de Gérard (cantine) - 3 likes
+            new Like { PostId = posts[0].Id, UserId = users[1].Id }, // François like
+            new Like { PostId = posts[0].Id, UserId = users[2].Id }, // Yael like
+            new Like { PostId = posts[0].Id, UserId = users[3].Id }, // Noël like
 
-            // Likes sur le post d'Alice (astuce) - 2 likes
-            new Like { PostId = posts[1].Id, UserId = users[1].Id }, // Bob like
-            new Like { PostId = posts[1].Id, UserId = users[4].Id }, // Emma like
+            // Likes sur le post de Gérard (privilèges) - 2 likes
+            new Like { PostId = posts[1].Id, UserId = users[1].Id }, // François like
+            new Like { PostId = posts[1].Id, UserId = users[4].Id }, // Dolores like
 
-            // Likes sur le post de Bob - 2 likes
-            new Like { PostId = posts[2].Id, UserId = users[0].Id }, // Alice like
-            new Like { PostId = posts[2].Id, UserId = users[3].Id }, // David like
+            // Likes sur le post de François - 2 likes
+            new Like { PostId = posts[2].Id, UserId = users[0].Id }, // Gérard like
+            new Like { PostId = posts[2].Id, UserId = users[3].Id }, // Noël like
 
-            // Likes sur le post de Claire - 2 likes
-            new Like { PostId = posts[3].Id, UserId = users[0].Id }, // Alice like
-            new Like { PostId = posts[3].Id, UserId = users[4].Id }, // Emma like
+            // Likes sur le post de Yael - 2 likes
+            new Like { PostId = posts[3].Id, UserId = users[0].Id }, // Gérard like
+            new Like { PostId = posts[3].Id, UserId = users[4].Id }, // Dolores like
 
-            // Likes sur le post de David - 3 likes (post populaire)
-            new Like { PostId = posts[4].Id, UserId = users[0].Id }, // Alice like
-            new Like { PostId = posts[4].Id, UserId = users[1].Id }, // Bob like
-            new Like { PostId = posts[4].Id, UserId = users[4].Id }, // Emma like
+            // Likes sur le post de Noël - 3 likes (post populaire)
+            new Like { PostId = posts[4].Id, UserId = users[0].Id }, // Gérard like
+            new Like { PostId = posts[4].Id, UserId = users[1].Id }, // François like
+            new Like { PostId = posts[4].Id, UserId = users[4].Id }, // Dolores like
 
-            // Likes sur le post d'Emma - 4 likes (post le plus populaire)
-            new Like { PostId = posts[5].Id, UserId = users[0].Id }, // Alice like
-            new Like { PostId = posts[5].Id, UserId = users[1].Id }, // Bob like
-            new Like { PostId = posts[5].Id, UserId = users[2].Id }, // Claire like
-            new Like { PostId = posts[5].Id, UserId = users[3].Id }  // David like
+            // Likes sur le post de Dolores - 4 likes
+            new Like { PostId = posts[5].Id, UserId = users[0].Id }, // Gérard like
+            new Like { PostId = posts[5].Id, UserId = users[1].Id }, // François like
+            new Like { PostId = posts[5].Id, UserId = users[2].Id }, // Yael like
+            new Like { PostId = posts[5].Id, UserId = users[3].Id }, // Noël like
+
+            // Likes sur le post de Jason - 5 likes (post le plus populaire)
+            new Like { PostId = posts[6].Id, UserId = users[0].Id }, // Gérard like
+            new Like { PostId = posts[6].Id, UserId = users[1].Id }, // François like
+            new Like { PostId = posts[6].Id, UserId = users[2].Id }, // Yael like
+            new Like { PostId = posts[6].Id, UserId = users[3].Id }, // Noël like
+            new Like { PostId = posts[6].Id, UserId = users[4].Id }  // Dolores like
         };
 
         await context.Likes.AddRangeAsync(likes);
@@ -348,10 +406,11 @@ public static class DataSeeder
 
         Console.WriteLine("Seed terminé avec succès !");
         Console.WriteLine("\nComptes de test disponibles (mot de passe: Password123) :");
-        Console.WriteLine("   - alice.dupont@email.com");
-        Console.WriteLine("   - bob.martin@email.com");
-        Console.WriteLine("   - claire.bernard@email.com");
-        Console.WriteLine("   - david.petit@email.com");
-        Console.WriteLine("   - emma.leroy@email.com");
+        Console.WriteLine("   - gerard.larcher@email.com");
+        Console.WriteLine("   - francois.bayrou@email.com");
+        Console.WriteLine("   - yael.braunpivet@email.com");
+        Console.WriteLine("   - noel.flantier@email.com");
+        Console.WriteLine("   - dolores.koulechov@email.com");
+        Console.WriteLine("   - saluden.jason@gmail.com");
     }
 }
