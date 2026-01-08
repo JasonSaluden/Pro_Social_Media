@@ -65,6 +65,23 @@ RUN echo '#!/bin/bash\n\
 if [ ! -d "/var/lib/mysql/mysql" ]; then\n\
     echo "Initializing MySQL..."\n\
     mysqld --initialize-insecure --user=mysql\n\
+    echo "Starting MySQL temporarily for setup..."\n\
+    mysqld --user=mysql &\n\
+    sleep 5\n\
+    echo "Creating database and user..."\n\
+    mysql -u root <<EOF\n\
+CREATE DATABASE IF NOT EXISTS pro_social_db;\n\
+CREATE USER IF NOT EXISTS "prosocial"@"localhost" IDENTIFIED BY "prosocial123";\n\
+CREATE USER IF NOT EXISTS "prosocial"@"127.0.0.1" IDENTIFIED BY "prosocial123";\n\
+CREATE USER IF NOT EXISTS "prosocial"@"%" IDENTIFIED BY "prosocial123";\n\
+GRANT ALL PRIVILEGES ON pro_social_db.* TO "prosocial"@"localhost";\n\
+GRANT ALL PRIVILEGES ON pro_social_db.* TO "prosocial"@"127.0.0.1";\n\
+GRANT ALL PRIVILEGES ON pro_social_db.* TO "prosocial"@"%";\n\
+FLUSH PRIVILEGES;\n\
+EOF\n\
+    echo "Stopping temporary MySQL..."\n\
+    mysqladmin -u root shutdown\n\
+    sleep 2\n\
 fi\n\
 \n\
 # Démarrer supervisord\n\
