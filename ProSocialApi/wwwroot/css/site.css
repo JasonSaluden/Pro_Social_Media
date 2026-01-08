@@ -1,0 +1,213 @@
+/* site.css - Styles globaux de l'application Pro Social */
+
+/* ===========================================
+   Variables et Reset
+   =========================================== */
+:root {
+    --ps-primary: #0d6efd;
+    --ps-secondary: #6c757d;
+    --ps-background: #f3f2ef;
+    --ps-card-border-radius: 10px;
+}
+
+/* ===========================================
+   Layout principal
+   =========================================== */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ps-background);
+}
+
+main {
+    flex: 1;
+}
+
+/* ===========================================
+   Navigation
+   =========================================== */
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+/* ===========================================
+   Cartes
+   =========================================== */
+.card {
+    border: none;
+    border-radius: var(--ps-card-border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: var(--ps-card-border-radius) var(--ps-card-border-radius) 0 0 !important;
+}
+
+/* ===========================================
+   Formulaires
+   =========================================== */
+.form-control:focus {
+    border-color: var(--ps-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* ===========================================
+   Page Feed - Création de post
+   =========================================== */
+#create-post-card textarea {
+    resize: none;
+    background: transparent;
+}
+
+#create-post-card textarea:focus {
+    box-shadow: none;
+}
+
+/* ===========================================
+   Posts / Feed
+   =========================================== */
+.post-card {
+    transition: box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================================
+   Commentaires
+   =========================================== */
+.comments-section {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    transition: background-color 0.2s ease;
+}
+
+.comment-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+/* ===========================================
+   Page Profil
+   =========================================== */
+#profile-avatar {
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================================
+   Page Réseau - Cartes utilisateur
+   =========================================== */
+.user-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================================
+   Authentification
+   =========================================== */
+.auth-card {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* ===========================================
+   Boutons
+   =========================================== */
+.btn {
+    border-radius: 20px;
+}
+
+.btn-primary {
+    background-color: var(--ps-primary);
+    border-color: var(--ps-primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover {
+    transform: scale(1.02);
+}
+
+/* ===========================================
+   Alertes
+   =========================================== */
+.alert {
+    border-radius: 8px;
+}
+
+/* ===========================================
+   Utilitaires
+   =========================================== */
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.avatar-md {
+    width: 48px;
+    height: 48px;
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+}
+
+.avatar-xl {
+    width: 120px;
+    height: 120px;
+}
+
+/* ===========================================
+   Spinner / Loading
+   =========================================== */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* ===========================================
+   Footer
+   =========================================== */
+footer {
+    margin-top: auto;
+}
+
+/* ===========================================
+   Animations
+   =========================================== */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+/* ===========================================
+   Responsive
+   =========================================== */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        border-radius: 8px;
+    }
+}

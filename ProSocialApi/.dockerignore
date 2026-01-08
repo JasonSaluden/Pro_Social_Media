@@ -1,0 +1,33 @@
+# Dossiers de build
+bin/
+obj/
+
+# Fichiers IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Fichiers de debug
+*.pdb
+
+# Logs
+*.log
+logs/
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+README*
+
+# Uploads locaux (seront recréés dans le conteneur)
+wwwroot/uploads/

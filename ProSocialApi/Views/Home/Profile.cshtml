@@ -1,0 +1,96 @@
+@{
+    ViewData["Title"] = "Mon Profil";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Card Profil -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="position-relative d-inline-block mb-3">
+                    <img src="https://via.placeholder.com/120" class="rounded-circle"
+                         id="profile-avatar" width="120" height="120" alt="Avatar">
+                    <label for="avatar-input" class="position-absolute bottom-0 end-0 btn btn-primary btn-sm rounded-circle p-2" style="cursor: pointer;">
+                        <i class="bi bi-camera"></i>
+                    </label>
+                    <input type="file" id="avatar-input" class="d-none" accept="image/*">
+                </div>
+                <div id="avatar-upload-status" class="small mb-2"></div>
+                <h4 id="profile-name">-</h4>
+                <p class="text-muted" id="profile-headline">-</p>
+                <p class="text-muted small" id="profile-email">-</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-around text-center">
+                    <div>
+                        <h5 id="connections-count">0</h5>
+                        <small class="text-muted">Connexions</small>
+                    </div>
+                    <div>
+                        <h5 id="posts-count">0</h5>
+                        <small class="text-muted">Publications</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Modifier le profil -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pencil me-2"></i>Modifier mon profil</h5>
+            </div>
+            <div class="card-body">
+                <div id="success-alert" class="alert alert-success d-none" role="alert"></div>
+                <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                <form id="profile-form">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">Prenom</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="headline" class="form-label">Titre professionnel</label>
+                        <input type="text" class="form-control" id="headline"
+                               placeholder="Ex: Developpeur Full Stack">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" rows="3"
+                                  placeholder="Parlez de vous..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i>Enregistrer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mes publications -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-post me-2"></i>Mes publications</h5>
+            </div>
+            <div class="card-body" id="my-posts-container">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/profile.js"></script>
+}

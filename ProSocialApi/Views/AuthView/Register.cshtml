@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">
+                    <i class="bi bi-person-plus me-2"></i>Inscription
+                </h2>
+
+                <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                <form id="register-form">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">Prenom</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" minlength="6" required>
+                        <div class="form-text">Minimum 6 caracteres</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" id="submit-btn">
+                        <span id="btn-text">S'inscrire</span>
+                        <span id="btn-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="text-center mb-0">
+                    Deja un compte ?
+                    <a href="/AuthView/Login">Connectez-vous</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/register.js"></script>
+}

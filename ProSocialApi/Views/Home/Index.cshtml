@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Accueil";
+}
+
+<div class="row">
+    <!-- Colonne principale - Feed -->
+    <div class="col-lg-8">
+        <!-- Formulaire de création de post -->
+        <div class="card mb-4" id="create-post-card">
+            <div class="card-body">
+                <form id="create-post-form">
+                    <div class="d-flex gap-3">
+                        <img src="https://via.placeholder.com/48" class="rounded-circle" id="user-avatar" width="48" height="48" alt="Avatar">
+                        <div class="flex-grow-1">
+                            <textarea class="form-control border-0" id="post-content" rows="2"
+                                placeholder="Quoi de neuf ?" required></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>Publier
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Feed des posts -->
+        <div id="feed-container">
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <div class="card" id="user-card">
+            <div class="card-body text-center">
+                <img src="https://via.placeholder.com/80" class="rounded-circle mb-3" id="sidebar-avatar" width="80" height="80" alt="Avatar">
+                <h5 class="card-title" id="sidebar-name">-</h5>
+                <p class="text-muted" id="sidebar-headline">-</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/feed.js"></script>
+}

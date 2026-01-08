@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # === Application API ===
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prosocial-api
+    ports:
+      - "5184:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ConnectionStrings__MySQL=Server=mysql;Port=3306;Database=pro_social_db;User=prosocial;Password=prosocial123;
+      - ConnectionStrings__MongoDB=mongodb://mongodb:27017
+      - MongoDB__DatabaseName=pro_social_db
+      - Jwt__Secret=VotreCleSecreteSuperSecurisee2024ProSocialApi!
+      - Jwt__Issuer=ProSocialApi
+      - Jwt__Audience=ProSocialApiUsers
+      - Jwt__ExpiresInDays=7
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    volumes:
+      - uploads:/app/wwwroot/uploads
+    networks:
+      - prosocial-network
+    restart: unless-stopped
+
+  # === Base de données MySQL ===
+  mysql:
+    image: mysql:8.0
+    container_name: prosocial-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: pro_social_db
+      MYSQL_USER: prosocial
+      MYSQL_PASSWORD: prosocial123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - prosocial-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # === Base de données MongoDB ===
+  mongodb:
+    image: mongo:7.0
+    container_name: prosocial-mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - prosocial-network
+    restart: unless-stopped
+
+# === Volumes persistants ===
+volumes:
+  mysql-data:
+    name: prosocial-mysql-data
+  mongodb-data:
+    name: prosocial-mongodb-data
+  uploads:
+    name: prosocial-uploads
+
+# === Réseau ===
+networks:
+  prosocial-network:
+    name: prosocial-network
+    driver: bridge
