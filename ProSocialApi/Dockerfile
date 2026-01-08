@@ -23,7 +23,8 @@ RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-p
 
 # Installation de MySQL 8.0
 RUN apt-get update && apt-get install -y mysql-server \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/mysql/*
 
 # Installation de MongoDB 7.0
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg \
