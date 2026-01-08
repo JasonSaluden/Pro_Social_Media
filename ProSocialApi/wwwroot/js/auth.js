@@ -22,7 +22,7 @@ function updateAuthNav() {
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item" href="/Home/Profile"><i class="bi bi-person me-2"></i>Mon profil</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/auth/Login" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Deconnexion</a></li>
+                    <li><a class="dropdown-item" href="/AuthView/Login" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Deconnexion</a></li>
                 </ul>
             </li>`;
     } else {
