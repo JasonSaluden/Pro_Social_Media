@@ -211,7 +211,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Migration et création de la base de données avec des données de test
-if (app.Environment.IsDevelopment())
+// Exécuté en Development et en Docker
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
     // Crée un scope
     using var scope = app.Services.CreateScope();
