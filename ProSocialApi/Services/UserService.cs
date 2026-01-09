@@ -17,10 +17,12 @@ namespace ProSocialApi.Services;
 public class UserService : IUserService
 {
     private readonly ApplicationDbContext _context;
+    private readonly ISanitizationService _sanitizer;
 
-    public UserService(ApplicationDbContext context)
+    public UserService(ApplicationDbContext context, ISanitizationService sanitizer)
     {
         _context = context;
+        _sanitizer = sanitizer;
     }
 
     /// <summary>
@@ -62,10 +64,10 @@ public class UserService : IUserService
             user.LastName = updateDto.LastName;
 
         if (updateDto.Headline != null)
-            user.Headline = updateDto.Headline;
+            user.Headline = _sanitizer.StripAllHtml(updateDto.Headline); // Sanitize XSS
 
         if (updateDto.Bio != null)
-            user.Bio = updateDto.Bio;
+            user.Bio = _sanitizer.StripAllHtml(updateDto.Bio); // Sanitize XSS
 
         if (updateDto.AvatarUrl != null)
             user.AvatarUrl = updateDto.AvatarUrl;

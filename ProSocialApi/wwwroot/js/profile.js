@@ -86,8 +86,8 @@ function displayPosts(posts) {
         const date = formatDate(post.createdAt, false);
         return `
             <div class="border-bottom pb-3 mb-3">
-                <p class="mb-1">${post.content}</p>
-                <small class="text-muted">${date} - ${post.likesCount || 0} likes, ${post.commentsCount || 0} commentaires</small>
+                <p class="mb-1">${escapeHtml(post.content)}</p>
+                <small class="text-muted">${escapeHtml(date)} - ${post.likesCount || 0} likes, ${post.commentsCount || 0} commentaires</small>
             </div>`;
     }).join('');
 }

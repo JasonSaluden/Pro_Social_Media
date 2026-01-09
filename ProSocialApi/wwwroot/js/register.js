@@ -2,8 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Si déjà connecté, rediriger vers l'accueil
-    const { token, user } = getAuthData();
-    if (token && user) {
+    const { user } = getAuthData();
+    if (user) {
         window.location.href = '/Home/Index';
         return;
     }
@@ -44,13 +44,14 @@ async function handleRegister(e) {
         const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin', // Accepte le cookie HttpOnly du serveur
             body: JSON.stringify(data)
         });
 
         const result = await response.json();
 
-        if (result.success && result.token) {
-            localStorage.setItem('token', result.token);
+        if (result.success && result.user) {
+            // Stocker uniquement les infos user (le token est dans un cookie HttpOnly)
             localStorage.setItem('user', JSON.stringify(result.user));
             window.location.href = '/Home/Index';
         } else {

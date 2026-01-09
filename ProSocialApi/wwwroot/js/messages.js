@@ -87,10 +87,10 @@ function renderConversationItem(conv) {
                  class="rounded-circle me-3" width="48" height="48" alt="Avatar">
             <div class="flex-grow-1 overflow-hidden">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-truncate">${participant.firstName} ${participant.lastName}</h6>
-                    <small class="text-muted">${lastMessageTime}</small>
+                    <h6 class="mb-0 text-truncate">${escapeHtml(participant.firstName)} ${escapeHtml(participant.lastName)}</h6>
+                    <small class="text-muted">${escapeHtml(lastMessageTime)}</small>
                 </div>
-                <p class="mb-0 text-muted small text-truncate">${lastMessage}</p>
+                <p class="mb-0 text-muted small text-truncate">${escapeHtml(lastMessage)}</p>
             </div>
         </div>
     `;
@@ -240,12 +240,12 @@ async function searchUsers(query) {
         container.innerHTML = filteredUsers.map(user => `
             <div class="search-result-item d-flex align-items-center p-2 border-bottom"
                  data-user-id="${user.id}"
-                 data-user-name="${user.firstName} ${user.lastName}"
-                 data-user-avatar="${user.avatarUrl || ''}">
+                 data-user-name="${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}"
+                 data-user-avatar="${escapeHtml(user.avatarUrl || '')}">
                 <img src="${getAvatarUrl(user.avatarUrl, 32)}" class="rounded-circle me-2" width="32" height="32" alt="">
                 <div>
-                    <div class="fw-medium">${user.firstName} ${user.lastName}</div>
-                    <small class="text-muted">${user.headline || ''}</small>
+                    <div class="fw-medium">${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}</div>
+                    <small class="text-muted">${escapeHtml(user.headline)}</small>
                 </div>
             </div>
         `).join('');
@@ -350,9 +350,4 @@ function formatRelativeTime(dateString) {
     return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 }
 
-// Échapper le HTML pour éviter les XSS
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+// Note: escapeHtml() est définie dans common.js

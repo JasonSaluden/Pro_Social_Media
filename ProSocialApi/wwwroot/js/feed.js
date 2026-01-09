@@ -66,12 +66,12 @@ function createPostCard(post) {
                     <img src="${getAvatarUrl(post.author?.avatarUrl)}"
                          class="rounded-circle" width="48" height="48" alt="Avatar">
                     <div>
-                        <h6 class="mb-0">${post.author?.firstName || ''} ${post.author?.lastName || ''}</h6>
-                        <small class="text-muted">${post.author?.headline || ''}</small>
-                        <br><small class="text-muted">${date}</small>
+                        <h6 class="mb-0">${escapeHtml(post.author?.firstName)} ${escapeHtml(post.author?.lastName)}</h6>
+                        <small class="text-muted">${escapeHtml(post.author?.headline)}</small>
+                        <br><small class="text-muted">${escapeHtml(date)}</small>
                     </div>
                 </div>
-                <p class="card-text">${post.content}</p>
+                <p class="card-text">${escapeHtml(post.content)}</p>
                 <hr>
                 <div class="d-flex gap-3">
                     <button class="btn ${likeButtonClass} btn-sm" id="like-btn-${post.id}"
@@ -222,10 +222,10 @@ function createCommentHtml(comment) {
                  class="rounded-circle" width="32" height="32" alt="Avatar">
             <div class="flex-grow-1">
                 <div class="bg-light rounded p-2">
-                    <strong class="small">${comment.author?.firstName || ''} ${comment.author?.lastName || ''}</strong>
-                    <p class="mb-0 small">${comment.content}</p>
+                    <strong class="small">${escapeHtml(comment.author?.firstName)} ${escapeHtml(comment.author?.lastName)}</strong>
+                    <p class="mb-0 small">${escapeHtml(comment.content)}</p>
                 </div>
-                <small class="text-muted">${date}</small>
+                <small class="text-muted">${escapeHtml(date)}</small>
                 ${isOwner ? `<button class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="deleteComment('${comment.id}', '${comment.postId}')">
                     <i class="bi bi-trash"></i>
                 </button>` : ''}

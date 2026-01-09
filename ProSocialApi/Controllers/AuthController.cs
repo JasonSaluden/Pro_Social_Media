@@ -13,22 +13,68 @@ namespace ProSocialApi.Controllers;
 /// Endpoints disponibles :
 /// - POST /api/auth/register : Inscription d'un nouvel utilisateur
 /// - POST /api/auth/login : Connexion d'un utilisateur existant
+/// - POST /api/auth/logout : Déconnexion (suppression du cookie)
 /// </summary>
-[ApiController]                          
+[ApiController]
 [Route("api/[controller]")]              // Route de base : /api/auth
 [Produces("application/json")]           // Force à renvoyer du JSON (mais ca le fait par défaut)
 public class AuthController : ControllerBase
 {
     // Service d'authentification
     private readonly IAuthService _authService;
+    private readonly IConfiguration _configuration;
+
+    // Nom du cookie JWT
+    private const string JwtCookieName = "jwt_token";
 
     /// <summary>
     /// Constructeur avec injection de dépendances.
     /// </summary>
     /// <param name="authService">Service gérant la logique d'authentification</param>
-    public AuthController(IAuthService authService)
+    /// <param name="configuration">Configuration pour récupérer les paramètres JWT</param>
+    public AuthController(IAuthService authService, IConfiguration configuration)
     {
         _authService = authService;
+        _configuration = configuration;
+    }
+
+    /// <summary>
+    /// Configure et envoie le cookie HttpOnly contenant le JWT.
+    /// </summary>
+    private void SetJwtCookie(string token)
+    {
+        var expiresInDays = int.Parse(_configuration["Jwt:ExpiresInDays"] ?? "7");
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,           // Non accessible par JavaScript (protection XSS)
+            Secure = true,             // Envoyé uniquement en HTTPS (desactivé en dev)
+            SameSite = SameSiteMode.Strict, // Protection CSRF
+            Expires = DateTimeOffset.UtcNow.AddDays(expiresInDays),
+            Path = "/"                 // Accessible sur tout le site
+        };
+
+        // En développement, on peut désactiver Secure pour HTTP local
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+        {
+            cookieOptions.Secure = false;
+        }
+
+        Response.Cookies.Append(JwtCookieName, token, cookieOptions);
+    }
+
+    /// <summary>
+    /// Supprime le cookie JWT.
+    /// </summary>
+    private void RemoveJwtCookie()
+    {
+        Response.Cookies.Delete(JwtCookieName, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/"
+        });
     }
 
     // INSCRIPTION - POST /api/auth/register
@@ -55,7 +101,13 @@ public class AuthController : ControllerBase
             return BadRequest(result);
         }
 
-        // Succès : retourner 200 avec le token et les infos utilisateur
+        // Stocker le token dans un cookie HttpOnly
+        if (!string.IsNullOrEmpty(result.Token))
+        {
+            SetJwtCookie(result.Token);
+        }
+
+        // Succès : retourner 200 avec les infos utilisateur (token aussi pour rétrocompatibilité)
         return Ok(result);
     }
 
@@ -84,7 +136,28 @@ public class AuthController : ControllerBase
             return Unauthorized(result);
         }
 
-        // Succès : retourner 200 avec le token et les infos utilisateur
+        // Stocker le token dans un cookie HttpOnly
+        if (!string.IsNullOrEmpty(result.Token))
+        {
+            SetJwtCookie(result.Token);
+        }
+
+        // Succès : retourner 200 avec les infos utilisateur (token aussi pour rétrocompatibilité)
         return Ok(result);
+    }
+
+    // DECONNEXION - POST /api/auth/logout
+
+    /// <summary>
+    /// Déconnexion de l'utilisateur.
+    /// Supprime le cookie JWT HttpOnly.
+    /// </summary>
+    /// <returns>200 OK : Déconnexion réussie</returns>
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Logout()
+    {
+        RemoveJwtCookie();
+        return Ok(new { success = true, message = "Déconnexion réussie" });
     }
 }

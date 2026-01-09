@@ -32,6 +32,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddSingleton<MongoDbContext>();
 
 // Autres services
+builder.Services.AddSingleton<ISanitizationService, SanitizationService>(); // Sanitization XSS (singleton car stateless)
 builder.Services.AddScoped<IAuthService, AuthService>();                // Authentification (login, register)
 builder.Services.AddScoped<IUserService, UserService>();                // Gestion des profils utilisateurs
 builder.Services.AddScoped<IConnectionService, ConnectionService>();    // Gestion des connexions entre utilisateurs
@@ -75,9 +76,19 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 
-    // Événement pour logger dans le terminal
+    // Événement pour logger dans le terminal et gérer les cookies
     options.Events = new JwtBearerEvents
     {
+        // Récupère le token depuis le cookie HttpOnly si pas dans le header
+        OnMessageReceived = context =>
+        {
+            // Si pas de token dans le header Authorization, chercher dans le cookie
+            if (string.IsNullOrEmpty(context.Token))
+            {
+                context.Token = context.Request.Cookies["jwt_token"];
+            }
+            return Task.CompletedTask;
+        },
         // Appelé quand la validation du token échoue
         OnAuthenticationFailed = context =>
         {
@@ -173,6 +184,39 @@ if (app.Environment.IsDevelopment())
 
 // Activation de la politique CORS configurée plus haut
 app.UseCors("AllowAll");
+
+// HEADERS DE SÉCURITÉ - Protection contre XSS, Clickjacking, etc.
+app.Use(async (context, next) =>
+{
+    // Protection contre le sniffing de type MIME
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+    // Protection contre le clickjacking (iframe)
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+
+    // Filtre XSS du navigateur (legacy, mais utile pour anciens navigateurs)
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+
+    // Content Security Policy - Protection XSS moderne
+    // Autorise uniquement les scripts/styles du même domaine + inline styles pour Bootstrap
+    context.Response.Headers.Append("Content-Security-Policy",
+        "default-src 'self'; " +
+        "script-src 'self'; " +
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+        "font-src 'self' https://cdn.jsdelivr.net; " +
+        "img-src 'self' data: https: blob:; " +
+        "connect-src 'self'; " +
+        "frame-ancestors 'none';");
+
+    // Contrôle du referrer
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+
+    // Désactive les fonctionnalités non utilisées
+    context.Response.Headers.Append("Permissions-Policy",
+        "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+
+    await next();
+});
 
 // Fichiers statiques (CSS, JS, images dans wwwroot/)
 app.UseStaticFiles();

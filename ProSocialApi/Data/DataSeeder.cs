@@ -54,6 +54,7 @@ public static class DataSeeder
         }
 
         Console.WriteLine("Démarrage du seed...");
+
         // ÉTAPE 1 : CRÉATION DES UTILISATEURS
         // 5 profils professionnels différents pour simuler un réseau diversifié
         // Les GUIDs sont fixes pour faciliter les tests et la reproductibilité
@@ -139,6 +140,7 @@ public static class DataSeeder
         await context.Users.AddRangeAsync(users);
         await context.SaveChangesAsync();
         Console.WriteLine($"{users.Count} utilisateurs créés");
+
         // ÉTAPE 2 : CRÉATION DES CONNEXIONS (RÉSEAU SOCIAL)
         // Graphe de connexions :
         // - Gérard <-> François (Accepted)
@@ -230,6 +232,7 @@ public static class DataSeeder
         await context.Connections.AddRangeAsync(connections);
         await context.SaveChangesAsync();
         Console.WriteLine($"{connections.Count} connexions créées");
+
         // ÉTAPE 3 : CRÉATION DES POSTS
         // Posts avec du contenu varié
         // Les dates sont décalées dans le passé pour simuler de l'activité
@@ -298,10 +301,10 @@ public static class DataSeeder
         await context.Posts.AddRangeAsync(posts);
         await context.SaveChangesAsync();
         Console.WriteLine($"{posts.Count} posts créés");
+
         // ÉTAPE 4 : CRÉATION DES COMMENTAIRES
         // Interactions entre utilisateurs sur les posts
         // Les dates sont décalées pour être après la création des posts
-
         var comments = new List<Comment>
         {
             // Commentaires sur le post de Gérard (cantine) - posts[0]
@@ -356,6 +359,7 @@ public static class DataSeeder
         await context.Comments.AddRangeAsync(comments);
         await context.SaveChangesAsync();
         Console.WriteLine($"{comments.Count} commentaires créés");
+
         // ÉTAPE 5 : CRÉATION DES LIKES
         // Distribution réaliste des likes sur les posts
         // Certains posts sont plus populaires que d'autres

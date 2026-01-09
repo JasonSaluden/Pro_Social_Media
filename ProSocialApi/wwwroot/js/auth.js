@@ -7,10 +7,9 @@ function updateAuthNav() {
     const authNav = document.getElementById('auth-nav');
     if (!authNav) return;
 
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-    if (token && user) {
+    if (user) {
         authNav.innerHTML = `
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -36,8 +35,18 @@ function updateAuthNav() {
     }
 }
 
-function logout() {
-    localStorage.removeItem('token');
+async function logout() {
+    try {
+        // Appel API pour supprimer le cookie HttpOnly côté serveur
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'same-origin'
+        });
+    } catch (error) {
+        console.error('Erreur logout:', error);
+    }
+
+    // Supprimer les infos utilisateur du localStorage
     localStorage.removeItem('user');
     window.location.href = '/AuthView/Login';
 }

@@ -17,10 +17,12 @@ namespace ProSocialApi.Services;
 public class PostService : IPostService
 {
     private readonly ApplicationDbContext _context;
+    private readonly ISanitizationService _sanitizer;
 
-    public PostService(ApplicationDbContext context)
+    public PostService(ApplicationDbContext context, ISanitizationService sanitizer)
     {
         _context = context;
+        _sanitizer = sanitizer;
     }
 
     /// <summary>
@@ -31,7 +33,7 @@ public class PostService : IPostService
         var post = new Post
         {
             AuthorId = authorId,
-            Content = createDto.Content,
+            Content = _sanitizer.StripAllHtml(createDto.Content), // Sanitize XSS
             ImageUrl = createDto.ImageUrl
         };
 
@@ -74,7 +76,7 @@ public class PostService : IPostService
 
         // Mise à jour conditionnelle des champs fournis
         if (updateDto.Content != null)
-            post.Content = updateDto.Content;
+            post.Content = _sanitizer.StripAllHtml(updateDto.Content); // Sanitize XSS
 
         if (updateDto.ImageUrl != null)
             post.ImageUrl = updateDto.ImageUrl;

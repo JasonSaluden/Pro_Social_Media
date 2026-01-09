@@ -16,10 +16,12 @@ namespace ProSocialApi.Services;
 public class CommentService : ICommentService
 {
     private readonly ApplicationDbContext _context;
+    private readonly ISanitizationService _sanitizer;
 
-    public CommentService(ApplicationDbContext context)
+    public CommentService(ApplicationDbContext context, ISanitizationService sanitizer)
     {
         _context = context;
+        _sanitizer = sanitizer;
     }
 
     /// <summary>
@@ -38,7 +40,7 @@ public class CommentService : ICommentService
         {
             PostId = postId,
             AuthorId = authorId,
-            Content = createDto.Content
+            Content = _sanitizer.StripAllHtml(createDto.Content) // Sanitize XSS
         };
 
         _context.Comments.Add(comment);

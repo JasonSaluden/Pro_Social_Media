@@ -1,31 +1,31 @@
 // common.js - Fonctions et utilitaires partagés
 
 // Récupère les données d'authentification
+// Note: Le token JWT est maintenant dans un cookie HttpOnly (non accessible par JS)
+// On garde les infos user dans localStorage pour l'affichage seulement
 function getAuthData() {
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || 'null');
-    return { token, user };
+    return { user };
 }
 
 // Vérifie si l'utilisateur est connecté, redirige sinon
 function requireAuth() {
-    const { token, user } = getAuthData();
-    if (!token || !user) {
+    const { user } = getAuthData();
+    if (!user) {
         window.location.href = '/AuthView/Login';
         return null;
     }
-    return { token, user };
+    return { user };
 }
 
 // Effectue une requête API authentifiée
+// Le cookie HttpOnly est envoyé automatiquement avec credentials: 'same-origin'
 async function apiRequest(url, options = {}) {
-    const { token } = getAuthData();
-
     const defaultOptions = {
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin' // Envoie automatiquement les cookies HttpOnly
     };
 
     const mergedOptions = {
@@ -34,14 +34,14 @@ async function apiRequest(url, options = {}) {
         headers: {
             ...defaultOptions.headers,
             ...options.headers
-        }
+        },
+        credentials: 'same-origin'
     };
 
     const response = await fetch(url, mergedOptions);
 
     // Si non autorisé, déconnexion
     if (response.status === 401) {
-        localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/AuthView/Login';
         return null;
@@ -109,4 +109,12 @@ function getAvatarUrl(url, size = 48) {
 // Met à jour le localStorage user
 function updateStoredUser(userData) {
     localStorage.setItem('user', JSON.stringify(userData));
+}
+
+// Échappe le HTML pour éviter les XSS
+function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
 }

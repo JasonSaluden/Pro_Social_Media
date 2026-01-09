@@ -20,11 +20,13 @@ public class MessageService : IMessageService
 {
     private readonly MongoDbContext _mongoContext;    // Pour les conversations (MongoDB)
     private readonly ApplicationDbContext _sqlContext; // Pour les infos utilisateurs (MySQL)
+    private readonly ISanitizationService _sanitizer;
 
-    public MessageService(MongoDbContext mongoContext, ApplicationDbContext sqlContext)
+    public MessageService(MongoDbContext mongoContext, ApplicationDbContext sqlContext, ISanitizationService sanitizer)
     {
         _mongoContext = mongoContext;
         _sqlContext = sqlContext;
+        _sanitizer = sanitizer;
     }
 
     /// <summary>
@@ -62,7 +64,7 @@ public class MessageService : IMessageService
                 new Message
                 {
                     SenderId = userIdStr,
-                    Content = createDto.InitialMessage,
+                    Content = _sanitizer.StripAllHtml(createDto.InitialMessage), // Sanitize XSS
                     SentAt = DateTime.UtcNow
                 }
             },
@@ -178,7 +180,7 @@ public class MessageService : IMessageService
         var message = new Message
         {
             SenderId = senderIdStr,
-            Content = sendDto.Content,
+            Content = _sanitizer.StripAllHtml(sendDto.Content), // Sanitize XSS
             SentAt = DateTime.UtcNow
         };
 
@@ -200,7 +202,7 @@ public class MessageService : IMessageService
         {
             SenderId = senderIdStr,
             SenderName = sender != null ? $"{sender.FirstName} {sender.LastName}" : "Inconnu",
-            Content = sendDto.Content,
+            Content = message.Content, // Contenu déjà sanitizé
             SentAt = message.SentAt
         };
     }
